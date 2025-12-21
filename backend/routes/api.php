@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
+use App\Models\Address;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/product', ProductController::class)->only(['store', 'update', 'destroy']);
     Route::put('/product/active/{product}', [ProductController::class, 'changeActive']);
     Route::get('product/disabled/{store}', [ProductController::class, 'getDisabled']);
+
+    Route::apiResource('/address', AddressController::class)->only(['store', 'update']);
+    Route::get('/address/user/{user}', [AddressController::class, 'userAddress']);
+    Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
 });
 
 Route::get('/store', [StoreController::class, 'index'])->name('store.index');
