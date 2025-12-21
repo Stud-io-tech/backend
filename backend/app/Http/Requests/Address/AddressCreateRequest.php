@@ -36,17 +36,15 @@ class AddressCreateRequest extends FormRequest
                 'nullable',
                 'exists:users,id',
                 'required_without:store_id',
-                // 'prohibited_with:store_id',
             ],
 
             'store_id' => [
                 'nullable',
                 'exists:stores,id',
                 'required_without:user_id',
-                // 'prohibited_with:user_id',
             ],
             'cep' => ['required', 'string', 'max:8'],
-            'state' => ['required', 'string', 'max:2'],
+            'state' => ['required', 'string', 'max:100'],
             'city' => ['required', 'string', 'max:100'],
             'district' => ['required', 'string', 'max:100'],
             'street' => ['required', 'string', 'max:255'],
