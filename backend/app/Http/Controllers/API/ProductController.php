@@ -66,7 +66,7 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'store_id' => $request->store_id,
                 'amount' => $request->amount ?? 1,
-                'is_perishable' => $request->is_perishable ?? false,
+                'is_perishable' => $request->boolean('is_perishable') ?? false,
                 'preparation_time' => $request->preparation_time ?? 0
             ], );
 
@@ -120,7 +120,7 @@ class ProductController extends Controller
                 'public_id' => $publicId ?? $product->public_id,
                 'price' => $request->price,
                 'amount' => $request->amount ?? $product->amount,
-                'is_perishable' => $request->is_perishable ?? $product->is_perishable,
+                'is_perishable' => $request->boolean('is_perishable') ?? $product->is_perishable,
                 'preparation_time' => $request->preparation_time ?? $product->preparation_time,
             ], $product);
 

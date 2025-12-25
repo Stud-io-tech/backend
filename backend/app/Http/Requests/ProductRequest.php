@@ -20,11 +20,20 @@ class ProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_open' => filter_var($this->is_open, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            'is_delivered' => filter_var($this->is_delivered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+        ]);
+    }
+
     public function rules(): array
     {
         return [
             'name' => 'required|string|max: 255',
-            'description' => 'required|string',
+            'description' => 'required|text',
             'price' => 'required|numeric',
             'image' => 'image',
             'store_id' => ['required', 'string', Rule::exists('stores', 'id')],
