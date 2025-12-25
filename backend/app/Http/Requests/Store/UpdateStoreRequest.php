@@ -13,22 +13,22 @@ class UpdateStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->whatsapp == $this->route('store')->whatsapp) {
-            return [
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'whatsapp' => 'required|string',
-                'image' => 'image',
-                'chave_pix' => 'required|string|max:255',
-            ];
-        }
 
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'whatsapp' => 'required|string|unique:stores,whatsapp',
-            'image' => 'image',
-            'chave_pix' => 'required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+
+            'image' => 'nullable|image',
+
+            'pix_key' => 'nullable|string|max:255',
+
+            'schedules' => 'sometimes|required|string',
+
+            'is_open' => 'sometimes|boolean',
+            'is_delivered' => 'sometimes|boolean',
+
+            'delivery_time_km' => 'nullable|integer|min:1',
+            'dynamic_freight_km' => 'nullable|numeric|min:0',
         ];
     }
 }
