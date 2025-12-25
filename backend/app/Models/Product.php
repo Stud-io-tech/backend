@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use SoftDeletes, HasUuids, HasFactory;
+    use HasUuids, HasFactory;
 
     protected $table = 'products';
 
@@ -19,10 +19,11 @@ class Product extends Model
         'description',
         'price',
         'amount',
-        'sold',
         'active',
         'image',
         'public_id',
+        'is_perishable',
+        'preparation_time',
     ];
 
     public function store()
