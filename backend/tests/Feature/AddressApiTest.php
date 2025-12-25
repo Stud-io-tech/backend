@@ -48,7 +48,7 @@ class AddressApiTest extends TestCase
     public function test_can_create_address_for_store()
     {
         $user = User::factory()->create();
-        $store = Store::factory()->create(['owner_id' => $user->id]);
+        $store = Store::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user);
 
@@ -152,7 +152,7 @@ class AddressApiTest extends TestCase
     public function test_store_owner_can_update_store_address()
     {
         $user = User::factory()->create();
-        $store = Store::factory()->create(['owner_id' => $user->id]);
+        $store = Store::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user);
 
@@ -180,7 +180,7 @@ class AddressApiTest extends TestCase
     public function test_cannot_change_address_owner_from_user_to_store()
     {
         $user = User::factory()->create();
-        $store = Store::factory()->create(['owner_id' => $user->id]);
+        $store = Store::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user);
 
@@ -222,7 +222,7 @@ class AddressApiTest extends TestCase
     public function test_can_get_store_address()
     {
         $user = User::factory()->create();
-        $store = Store::factory()->create(['owner_id' => $user->id]);
+        $store = Store::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user);
 
