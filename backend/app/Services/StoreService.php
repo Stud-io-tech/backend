@@ -50,4 +50,15 @@ class StoreService
 
         return $this->store;
     }
+
+    public function changeStatusOpen(Store $store)
+    {
+        $this->store = $store;
+
+        $this->store->update([
+            'is_open' => !$store->is_open,
+        ]);
+
+        return $this->store;
+    }
 }

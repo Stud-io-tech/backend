@@ -163,4 +163,12 @@ class StoreController extends Controller
 
         return response(['store' => $storeUpdated], 200);
     }
+
+    public function changeStatusOpen(Store $store)
+    {
+
+        $storeUpdated = $this->storeService->changeStatusOpen($store);
+
+        return response(['store' => $storeUpdated], 200);
+    }
 }
