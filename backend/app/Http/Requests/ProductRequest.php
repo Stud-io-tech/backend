@@ -24,8 +24,7 @@ class ProductRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'is_open' => filter_var($this->is_open, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-            'is_delivered' => filter_var($this->is_delivered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            'is_perishable' => filter_var($this->is_perishable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
         ]);
     }
 
@@ -33,7 +32,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max: 255',
-            'description' => 'required|text',
+            'description' => 'required|string',
             'price' => 'required|numeric',
             'image' => 'image',
             'store_id' => ['required', 'string', Rule::exists('stores', 'id')],
