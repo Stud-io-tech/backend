@@ -29,9 +29,8 @@ class StoreFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
-            'owner_id' => User::factory()->create()->id,
+            'user_id' => User::factory()->create()->id,
             'active' => fake()->boolean(),
-            'whatsapp' => fake()->phoneNumber(),
         ];
     }
 }
