@@ -28,8 +28,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('/address', AddressController::class)->only(['store', 'update']);
     Route::get('/address/user/{user}', [AddressController::class, 'userAddress']);
-    Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
 });
+
+Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
 
 Route::get('/store', [StoreController::class, 'index'])->name('store.index');
 Route::get('/store/{store}', [StoreController::class, 'show'])->name('store.show');
