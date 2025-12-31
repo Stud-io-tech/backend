@@ -10,7 +10,7 @@ class StoreService
 
     public static function index()
     {
-        $stores = Store::all();
+        $stores = Store::where('active', true)->get();
 
         return $stores;
     }
@@ -23,7 +23,7 @@ class StoreService
     }
 
     public function update(array $data, Store $store)
-    {   
+    {
         $this->store = $store;
 
         $this->store->update($data);
@@ -32,7 +32,7 @@ class StoreService
     }
 
     public function destroy(Store $store)
-    {   
+    {
         $this->store = $store;
 
         $this->store->delete();

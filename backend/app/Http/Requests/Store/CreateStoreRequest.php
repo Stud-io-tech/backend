@@ -35,7 +35,7 @@ class CreateStoreRequest extends FormRequest
             'is_open' => 'sometimes|boolean',
             'is_delivered' => 'sometimes|boolean',
 
-            'delivery_time_km' => 'nullable|integer|min:1',
+            'delivery_time_km' => 'nullable|integer|min:0',
             'dynamic_freight_km' => 'nullable|numeric|min:0',
         ];
     }
