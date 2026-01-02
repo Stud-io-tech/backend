@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CartItemController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
@@ -29,6 +30,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('/address', AddressController::class)->only(['store', 'update']);
     Route::get('/address/user/{user}', [AddressController::class, 'userAddress']);
+
+    Route::apiResource('/cart-item', CartItemController::class)->only(['store']);
+
 });
 
 Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
