@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\DB;
 class CartItemService
 {
 
-    private CartItem $cartItem;
-
-    public static function getGroupByStoreByUser(string $user_id)
+    public function show(string $id){
+        return CartItem::findOrFail($id);
+    }
+    public function getGroupByStoreByUser(string $user_id)
     {
         $listItems = CartItem::where('user_id', $user_id)->where('active', true)
             ->orderBy('created_at', 'desc')->get();

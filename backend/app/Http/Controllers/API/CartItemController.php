@@ -51,7 +51,12 @@ class CartItemController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $cartItem = $this->cartItemService->show($id);
+            return response(['cartItem'=> $cartItem], 200);
+        } catch (Exception $e) {
+            return response(['message' => $e], 500);
+        }
     }
 
     /**
@@ -69,7 +74,7 @@ class CartItemController extends Controller
     {
         try {
             $this->cartItemService->destroy($id);
-            return response()->noContent(); 
+            return response()->noContent();
         } catch (Exception $e) {
             return response(['message' => $e->getMessage()], 500);
         }
