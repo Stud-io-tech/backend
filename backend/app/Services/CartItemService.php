@@ -4,11 +4,44 @@ namespace App\Services;
 
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\Store;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class CartItemService
 {
+
+    public static function getGroupByStoreByUser(string $user_id)
+    {
+        $listItems = CartItem::where('user_id', $user_id)->where('active', true)
+            ->orderBy('created_at', 'desc')->get();
+
+        return $listItems
+            ->groupBy(fn($item) => $item->product->store_id)
+            ->map(function ($items, $storeId) {
+
+                $store = $items->first()->product->store;
+                return [
+
+                    'store_id' => $storeId,
+                    'store_name' => $store->name,
+                    'total' => $items->sum(
+                        fn($item) =>
+                        $item->product->price * $item->amount
+                    ),
+                    'cart_items' => $items->map(fn($item) => [
+                        'id' => $item->id,
+                        'product_id' => $item->product_id,
+                        'amount' => $item->amount,
+                        'active' => $item->active,
+                        'price' => $item->product->price,
+                        'image' => $item->product->image,
+                    ])->values(),
+                ];
+            })
+            ->values();
+    }
+
     public function store(array $data)
     {
 

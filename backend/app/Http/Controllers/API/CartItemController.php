@@ -15,6 +15,7 @@ class CartItemController extends Controller
     {
 
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -66,5 +67,14 @@ class CartItemController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getGroupByStoreByUser(string $user_id)
+    {
+        try {
+            return $this->cartItemService->getGroupByStoreByUser($user_id);
+        } catch (Exception $e) {
+            return response(['message' => $e], 500);
+        }
     }
 }
