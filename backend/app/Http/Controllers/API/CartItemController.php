@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CartItem\CartItemRequest;
+use App\Models\CartItem;
 use App\Services\CartItemService;
 use Exception;
 use Illuminate\Http\Request;
@@ -66,8 +67,14 @@ class CartItemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->cartItemService->destroy($id);
+            return response()->noContent(); 
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage()], 500);
+        }
     }
+
 
     public function getGroupByStoreByUser(string $user_id)
     {

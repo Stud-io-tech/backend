@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 class CartItemService
 {
 
+    private CartItem $cartItem;
+
     public static function getGroupByStoreByUser(string $user_id)
     {
         $listItems = CartItem::where('user_id', $user_id)->where('active', true)
@@ -80,5 +82,16 @@ class CartItemService
 
             return CartItem::create($data);
         });
+    }
+
+
+    public function destroy(string $id)
+    {
+
+        $deleted = CartItem::where('id', $id)->delete();
+
+        if ($deleted === 0) {
+            throw new Exception('Item do carrinho não encontrado.');
+        }
     }
 }
