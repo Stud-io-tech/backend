@@ -25,7 +25,6 @@ class CartItemService
                 throw new Exception('Produto não encontrado.');
             }
 
-            // carrinho não reserva estoque
             if ($data['amount'] > $product->amount) {
                 throw new Exception('Quantidade solicitada maior que o estoque disponível.');
             }
