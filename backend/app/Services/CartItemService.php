@@ -6,7 +6,6 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use League\Config\Exception\ValidationException;
 
 class CartItemService
 {
