@@ -10,7 +10,7 @@ class StoreService
 
     public static function index()
     {
-        $stores = Store::all();
+        $stores = Store::where('active', true)->get();
 
         return $stores;
     }
@@ -23,7 +23,7 @@ class StoreService
     }
 
     public function update(array $data, Store $store)
-    {   
+    {
         $this->store = $store;
 
         $this->store->update($data);
@@ -32,7 +32,7 @@ class StoreService
     }
 
     public function destroy(Store $store)
-    {   
+    {
         $this->store = $store;
 
         $this->store->delete();
@@ -46,6 +46,17 @@ class StoreService
 
         $this->store->update([
             'active' => !$store->active,
+        ]);
+
+        return $this->store;
+    }
+
+    public function changeStatusOpen(Store $store)
+    {
+        $this->store = $store;
+
+        $this->store->update([
+            'is_open' => !$store->is_open,
         ]);
 
         return $this->store;

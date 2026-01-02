@@ -9,26 +9,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Store extends Model
 {
-    use HasUuids, SoftDeletes, HasFactory;
+    use HasUuids, HasFactory;
 
-    protected $table = 'stores';    
+    protected $table = 'stores';
 
     protected $fillable = [
         'name',
         'image',
         'description',
         'public_id',
-        'owner_id',
+        'user_id',
         'active',
-        'whatsapp',
-        'chave_pix',
+        'pix_key',
+        'schedules',
+        'is_open',
+        'is_delivered',
+        'delivery_time_km',
+        'dynamic_freight_km',
     ];
 
-    public function owner() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function address() {
+    public function address()
+    {
         return $this->hasOne(Address::class);
     }
 

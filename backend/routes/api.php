@@ -20,7 +20,8 @@ Route::post('/register', [UserController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/store', StoreController::class)->only(['store', 'update', 'destroy']);
-    Route::put('/store/active/{store}', [StoreController::class, 'changeActive']);
+    Route::patch('/store/active/{store}', [StoreController::class, 'changeActive']);
+    Route::patch('/store/change-status-open/{store}', [StoreController::class, 'changeStatusOpen']);
 
     Route::apiResource('/product', ProductController::class)->only(['store', 'update', 'destroy']);
     Route::put('/product/active/{product}', [ProductController::class, 'changeActive']);
@@ -28,8 +29,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('/address', AddressController::class)->only(['store', 'update']);
     Route::get('/address/user/{user}', [AddressController::class, 'userAddress']);
-    Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
 });
+
+Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
 
 Route::get('/store', [StoreController::class, 'index'])->name('store.index');
 Route::get('/store/{store}', [StoreController::class, 'show'])->name('store.show');
