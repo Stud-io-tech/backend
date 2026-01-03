@@ -31,7 +31,7 @@ class CartItemService
                     'store_name' => $store->name,
                     'store_latitude' => $address?->latitude,
                     'store_longitude' => $address?->longitude,
-                    'store_freight'=> $store->dynamic_freight_km,
+                    'store_freight' => $store->dynamic_freight_km,
                     'total' => $items->sum(
                         fn($item) =>
                         $item->product->price * $item->amount
@@ -43,6 +43,7 @@ class CartItemService
                         'active' => $item->active,
                         'price' => $item->product->price,
                         'image' => $item->product->image,
+                        'name' => $item->product->name,
                     ])->values(),
                 ];
             })
