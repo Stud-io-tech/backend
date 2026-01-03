@@ -25,10 +25,13 @@ class CartItemService
             ->map(function ($items, $storeId) {
 
                 $store = $items->first()->product->store;
+                $address = $store->first()->address;
                 return [
-
                     'store_id' => $storeId,
                     'store_name' => $store->name,
+                    'store_latitude' => $address?->latitude,
+                    'store_longitude' => $address?->longitude,
+                    'store_freight'=> $store->dynamic_freight_km,
                     'total' => $items->sum(
                         fn($item) =>
                         $item->product->price * $item->amount
