@@ -32,9 +32,11 @@ class CartItemService
                     'store_latitude' => $address?->latitude,
                     'store_longitude' => $address?->longitude,
                     'store_freight' => $store->dynamic_freight_km,
-                    'total' => $items->sum(
-                        fn($item) =>
-                        $item->product->price * $item->amount
+                    'total' => number_format(
+                        $items->sum(fn($item) => $item->product->price * $item->amount),
+                        2,
+                        '.',
+                        ''
                     ),
                     'cart_items' => $items->map(fn($item) => [
                         'id' => $item->id,
