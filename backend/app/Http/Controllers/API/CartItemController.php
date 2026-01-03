@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CartItem\CartItemRequest;
-use App\Models\CartItem;
+use App\Http\Requests\CartItem\CreateCartItemRequest;
+use App\Http\Requests\CartItem\UpdateCartItemRequest;
 use App\Services\CartItemService;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class CartItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CartItemRequest $request)
+    public function store(CreateCartItemRequest $request)
     {
         try {
             $cartItem = $this->cartItemService->store([
@@ -53,7 +53,7 @@ class CartItemController extends Controller
     {
         try {
             $cartItem = $this->cartItemService->show($id);
-            return response(['cartItem'=> $cartItem], 200);
+            return response(['cartItem' => $cartItem], 200);
         } catch (Exception $e) {
             return response(['message' => $e], 500);
         }
@@ -62,10 +62,22 @@ class CartItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(UpdateCartItemRequest $request, string $id)
+    { {
+
+            try {
+                $cartItem = $this->cartItemService->updateAmount([
+                    'amount' => $request->amount,
+                ], $id);
+
+                return response($cartItem, 200);
+            } catch (Exception $e) {
+                return response(['message' => $e], 500);
+            }
+
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -89,4 +101,6 @@ class CartItemController extends Controller
             return response(['message' => $e], 500);
         }
     }
+
+
 }

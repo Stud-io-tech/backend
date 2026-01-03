@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 class CartItemService
 {
 
-    public function show(string $id){
+    public function show(string $id)
+    {
         return CartItem::findOrFail($id);
     }
     public function getGroupByStoreByUser(string $user_id)
@@ -85,6 +86,33 @@ class CartItemService
         });
     }
 
+    public function updateAmount(array $data, $id)
+    {
+        return DB::transaction(function () use ($data, $id) {
+            if ($data['amount'] < 1) {
+                throw new Exception('Quantidade inválida.');
+            }
+
+            $cartItem = CartItem::findOrFail($id);
+
+            $product = Product::find($cartItem->product_id);
+
+            if (!$product) {
+                throw new Exception('Produto não encontrado.');
+            }
+
+            if ($data['amount'] > $product->amount) {
+                throw new Exception('Quantidade solicitada maior que o estoque disponível.');
+            }
+
+            $cartItem->update([
+                'amount' => $data['amount'],
+            ]);
+
+            return $cartItem->refresh();
+        });
+    }
+
 
     public function destroy(string $id)
     {
@@ -95,4 +123,6 @@ class CartItemService
             throw new Exception('Item do carrinho não encontrado.');
         }
     }
+
+
 }

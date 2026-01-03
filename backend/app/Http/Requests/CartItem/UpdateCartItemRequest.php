@@ -5,7 +5,7 @@ namespace App\Http\Requests\CartItem;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CartItemRequest extends FormRequest
+class UpdateCartItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,6 @@ class CartItemRequest extends FormRequest
     {
         return [
             'amount' => ['sometimes', 'integer', 'min:1'],
-            'user_id' => ['required', 'string', Rule::exists('users', column: 'id')],
-            'product_id' => ['required', 'string', Rule::exists('products', column: 'id')],
         ];
     }
 }

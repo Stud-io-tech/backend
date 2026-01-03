@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/cart-item/stores/{user_id}', [CartItemController::class, 'getGroupByStoreByUser']);
     Route::delete('/cart-item/{id}', [CartItemController::class, 'destroy'])->name('cartItem.delete');
     Route::get('/cart-item/{id}', [CartItemController::class, 'show'])->name('cartItem.show');
+    Route::patch('/cart-item/{id}', [CartItemController::class, 'update'])->name('cartItem.update');
 
 });
 
