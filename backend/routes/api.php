@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CartItemController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
@@ -29,6 +30,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('/address', AddressController::class)->only(['store', 'update']);
     Route::get('/address/user/{user}', [AddressController::class, 'userAddress']);
+
+    Route::apiResource('/cart-item', CartItemController::class)->only(['store']);
+    Route::get('/cart-item/stores/{user_id}', [CartItemController::class, 'getGroupByStoreByUser']);
+    Route::delete('/cart-item/{id}', [CartItemController::class, 'destroy'])->name('cartItem.delete');
+    Route::get('/cart-item/{id}', [CartItemController::class, 'show'])->name('cartItem.show');
+    Route::patch('/cart-item/{id}', [CartItemController::class, 'update'])->name('cartItem.update');
+
 });
 
 Route::get('/address/store/{store}', [AddressController::class, 'storeAddress']);
