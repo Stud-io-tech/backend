@@ -20,6 +20,7 @@ class CartItemService
         $listItems = CartItem::with(['product.store.address'])
             ->where('user_id', $user_id)
             ->where('active', true)
+            ->orderBy('created_at')
             ->get()
             ->filter(fn($item) => $item->product?->active === true)
             ->map(function ($item) {
