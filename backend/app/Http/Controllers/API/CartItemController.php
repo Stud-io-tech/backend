@@ -7,7 +7,6 @@ use App\Http\Requests\CartItem\CreateCartItemRequest;
 use App\Http\Requests\CartItem\UpdateCartItemRequest;
 use App\Services\CartItemService;
 use Exception;
-use Illuminate\Http\Request;
 
 class CartItemController extends Controller
 {
@@ -102,5 +101,21 @@ class CartItemController extends Controller
         }
     }
 
+    public function approveOrderByStore(string $userId, string $storeId)
+    {
+
+        try {
+            $this->cartItemService->approveOrderByStore(
+                $userId,
+                $storeId
+            );
+
+            return response()->noContent();
+        } catch (Exception $e) {
+            return response([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }

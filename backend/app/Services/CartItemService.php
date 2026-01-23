@@ -17,33 +17,57 @@ class CartItemService
     }
     public function getGroupByStoreByUser(string $user_id)
     {
-        $listItems = CartItem::where('user_id', $user_id)->where('active', true)
-            ->orderBy('created_at', 'desc')->get();
+        $listItems = CartItem::with(['product.store.address'])
+            ->where('user_id', $user_id)
+            ->where('active', true)
+            ->get()
+            ->filter(fn($item) => $item->product?->active === true)
+            ->map(function ($item) {
+                if ($item->amount > $item->product->amount) {
+                    $item->amount = $item->product->amount;
+                }
+                return $item;
+            })
+            ->filter(fn($item) => $item->amount > 0);
 
         return $listItems
             ->groupBy(fn($item) => $item->product->store_id)
             ->map(function ($items, $storeId) {
 
                 $store = $items->first()->product->store;
-                $address = $store->first()->address;
+                $address = $store->address;
+
                 return [
                     'store_id' => $storeId,
                     'store_name' => $store->name,
+                    'store_is_open' => $store->is_open,
                     'store_latitude' => $address?->latitude,
                     'store_longitude' => $address?->longitude,
                     'store_freight' => $store->dynamic_freight_km,
                     'store_is_delivered' => $store->is_delivered,
+                    'store_whatsapp' => $store->address?->whatsapp,
+                    'store_owner_name' => $store->user?->name,
+                    'store_pix' => $store->pix_key,
+                    'store_city' => $store->address?->city,
                     'total' => number_format(
                         $items->sum(fn($item) => $item->product->price * $item->amount),
                         2,
                         '.',
                         ''
                     ),
+                    'min_preparation_time' => $items->sum(
+                        fn($item) =>
+                        $item->product->preparation_time ?? 0
+                    ),
+                    'max_preparation_time' => $items->sum(
+                        fn($item) =>
+                        ($item->product->preparation_time ?? 0) * $item->amount
+                    ),
+                    'store_delivery_time_km' => $store->delivery_time_km,
                     'cart_items' => $items->map(fn($item) => [
                         'id' => $item->id,
                         'product_id' => $item->product_id,
                         'amount' => $item->amount,
-                        'active' => $item->active,
                         'price' => $item->product->price,
                         'image' => $item->product->image,
                         'name' => $item->product->name,
@@ -132,4 +156,58 @@ class CartItemService
     }
 
 
+    public function approveOrderByStore(string $userId, string $storeId): void
+    {
+        DB::transaction(function () use ($userId, $storeId) {
+
+            $cartItems = CartItem::with('product')
+                ->where('user_id', $userId)
+                ->where('active', true)
+                ->whereHas('product', function ($query) use ($storeId) {
+                    $query->where('store_id', $storeId);
+                })
+                ->lockForUpdate()
+                ->get();
+
+            if ($cartItems->isEmpty()) {
+                throw new Exception(
+                    'Não há itens deste estabelecimento no carrinho.'
+                );
+            }
+
+            foreach ($cartItems as $cartItem) {
+                $product = $cartItem->product;
+
+                if (!$product || !$product->active) {
+                    throw new Exception(
+                        'Produto indisponível no momento.'
+                    );
+                }
+
+                if ($product->amount < 1) {
+                    throw new Exception(
+                        "Produto {$product->name} sem estoque."
+                    );
+                }
+
+                $finalAmount = min(
+                    $cartItem->amount,
+                    $product->amount
+                );
+
+                $product->decrement('amount', $finalAmount);
+
+                $cartItem->update([
+                    'amount' => $finalAmount,
+                    'active' => false,
+                ]);
+            }
+        });
+    }
+
 }
+
+
+
+
+
