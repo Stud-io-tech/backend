@@ -15,7 +15,7 @@ class ProductController extends Controller
 
     public function __construct(protected ProductService $productService)
     {
-        
+
     }
 
     /**
@@ -66,7 +66,9 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'store_id' => $request->store_id,
                 'amount' => $request->amount ?? 1,
-            ]);
+                'is_perishable' => $request->boolean('is_perishable') ?? false,
+                'preparation_time' => $request->preparation_time ?? 0
+            ], );
 
             return response(['product' => $product], 201);
         } catch (Exception $e) {
@@ -110,7 +112,7 @@ class ProductController extends Controller
                 $imageUrl = $uploadResult->getSecurePath();
                 $publicId = $uploadResult->getPublicId();
             }
-        
+
             $productUpdated = $this->productService->update([
                 'name' => $request->name,
                 'description' => $request->description,
@@ -118,6 +120,8 @@ class ProductController extends Controller
                 'public_id' => $publicId ?? $product->public_id,
                 'price' => $request->price,
                 'amount' => $request->amount ?? $product->amount,
+                'is_perishable' => $request->boolean('is_perishable') ?? $product->is_perishable,
+                'preparation_time' => $request->preparation_time ?? $product->preparation_time,
             ], $product);
 
             return response(['product' => $productUpdated], 200);

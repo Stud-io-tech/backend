@@ -16,9 +16,8 @@ class StoreController extends Controller
 {
     public function __construct(
         private StoreService $storeService
-    )
-    {
-        
+    ) {
+
     }
 
     /**
@@ -60,15 +59,19 @@ class StoreController extends Controller
                 $publicId = $uploadResult->getPublicId();
             }
 
-            
+
             $store = $this->storeService->store([
                 'name' => $request->name,
                 'description' => $request->description,
                 'image' => $imageUrl,
                 'public_id' => $publicId,
-                'whatsapp' => $request->whatsapp,
-                'owner_id' => Auth::user()->id,
-                'chave_pix' => $request->chave_pix,
+                'user_id' => Auth::user()->id,
+                'pix_key' => $request->pix_key,
+                'schedules' => $request->schedules,
+                'is_open' => $request->boolean('is_open') ?? false,
+                'is_delivered' => $request->boolean('is_delivered') ?? false,
+                'delivery_time_km' => $request->delivery_time_km ?? 0,
+                'dynamic_freight_km' => $request->dynamic_freight_km ?? 0,
             ]);
 
             return response(['store' => $store], 201);
@@ -114,14 +117,18 @@ class StoreController extends Controller
                 $publicId = $uploadResult->getPublicId();
             }
 
-            
+
             $storeUpdated = $this->storeService->update([
                 'name' => $request->name,
                 'description' => $request->description,
                 'image' => $imageUrl ?? $store->image,
-                'whatsapp' => $request->whatsapp,
                 'public_id' => $publicId ?? $store->public_id,
-                'chave_pix' => $request->chave_pix ?? $store->chave_pix,
+                'pix_key' => $request->pix_key ?? $store->pix_key,
+                'schedules' => $request->schedules ?? $store->schedules,
+                'is_open' => $request->boolean('is_open') ?? $store->is_open,
+                'is_delivered' => $request->boolean('is_delivered') ?? $store->is_delivered,
+                'delivery_time_km' => $request->delivery_time_km ?? $store->delivery_time_km,
+                'dynamic_freight_km' => $request->dynamic_freight_km ?? $store->dynamic_freight_km,
             ], $store);
 
             return response(['store' => $storeUpdated], 200);
@@ -140,7 +147,7 @@ class StoreController extends Controller
                 cloudinary()->uploadApi()->destroy($store->public_id);
             }
 
-            
+
             $storeDeleted = $this->storeService->destroy($store);
 
             return response(['store' => $storeDeleted], 200);
@@ -151,8 +158,16 @@ class StoreController extends Controller
 
     public function changeActive(Store $store)
     {
-        
-        $storeUpdated =  $this->storeService->changeActive($store);
+
+        $storeUpdated = $this->storeService->changeActive($store);
+
+        return response(['store' => $storeUpdated], 200);
+    }
+
+    public function changeStatusOpen(Store $store)
+    {
+
+        $storeUpdated = $this->storeService->changeStatusOpen($store);
 
         return response(['store' => $storeUpdated], 200);
     }

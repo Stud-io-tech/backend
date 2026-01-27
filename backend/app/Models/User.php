@@ -52,7 +52,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function store() {
-        return $this->hasOne(Store::class, 'owner_id');
+    public function store()
+    {
+        return $this->hasOne(Store::class, 'user_id');
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function cartItem()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }

@@ -37,7 +37,7 @@ class StoreServiceTest extends TestCase
             'description' => 'Descrição da Loja',
             'image' => 'imagem.jpg',
             'public_id' => '12345',
-            'owner_id' => $user->id,
+            'user_id' => $user->id,
             'active' => true,
             'whatsapp' => '84 986460846',
         ];
