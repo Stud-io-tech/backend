@@ -11,7 +11,11 @@ class ProductService
 
     public static function index()
     {
-        $products = Product::where('active', true)->get();
+        $products = Product::where('active', true)
+            ->whereHas('store', function ($query) {
+                $query->where('active', true);
+            })
+            ->orderBy('created_at', 'desc')->get();
 
         return $products;
     }
