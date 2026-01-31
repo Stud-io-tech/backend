@@ -22,8 +22,8 @@ class Product extends Model
         'active',
         'image',
         'public_id',
-        'is_perishable',
         'preparation_time',
+        'is_perishable',
     ];
 
     public function store()
