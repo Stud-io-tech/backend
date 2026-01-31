@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Store;
 use App\Services\ProductService;
@@ -44,7 +45,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    public function store(CreateProductRequest $request)
     {
         try {
             $imageUrl = null;
@@ -66,7 +67,6 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'store_id' => $request->store_id,
                 'amount' => $request->amount ?? 1,
-                'is_perishable' => $request->boolean('is_perishable') ?? false,
                 'preparation_time' => $request->preparation_time ?? 0
             ], );
 
@@ -95,7 +95,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         try {
             $imageUrl = null;
@@ -112,6 +112,7 @@ class ProductController extends Controller
                 $imageUrl = $uploadResult->getSecurePath();
                 $publicId = $uploadResult->getPublicId();
             }
+            $data = $request->validated();
 
             $productUpdated = $this->productService->update([
                 'name' => $request->name,
@@ -120,7 +121,9 @@ class ProductController extends Controller
                 'public_id' => $publicId ?? $product->public_id,
                 'price' => $request->price,
                 'amount' => $request->amount ?? $product->amount,
-                'is_perishable' => $request->boolean('is_perishable') ?? $product->is_perishable,
+                'is_perishable' => array_key_exists('is_perishable', $data)
+                    ? $data['is_perishable']
+                    : $product->is_perishable,
                 'preparation_time' => $request->preparation_time ?? $product->preparation_time,
             ], $product);
 
@@ -129,6 +132,7 @@ class ProductController extends Controller
             return response(['message' => $e], 500);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

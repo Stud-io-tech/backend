@@ -44,6 +44,7 @@ class ProductService
         return $this->product;
     }
 
+
     public function destroy(Product $product)
     {
         $this->product = $product;
