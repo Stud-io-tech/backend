@@ -11,13 +11,21 @@ class UpdateStoreRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-        protected function prepareForValidation(): void
+    protected function prepareForValidation(): void
     {
-        $this->merge([
-            'is_open' => filter_var($this->is_open, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-            'is_delivered' => filter_var($this->is_delivered, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-        ]);
+        if ($this->has('is_open')) {
+            $this->merge([
+                'is_open' => filter_var($this->is_open, FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
+
+        if ($this->has('is_delivered')) {
+            $this->merge([
+                'is_delivered' => filter_var($this->is_delivered, FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
     }
+
     public function rules(): array
     {
 

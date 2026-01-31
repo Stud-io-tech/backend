@@ -118,18 +118,29 @@ class StoreController extends Controller
             }
 
 
+            $data = $request->validated();
+
             $storeUpdated = $this->storeService->update([
-                'name' => $request->name,
-                'description' => $request->description,
+                'name' => $data['name'] ?? $store->name,
+                'description' => $data['description'] ?? $store->description,
                 'image' => $imageUrl ?? $store->image,
                 'public_id' => $publicId ?? $store->public_id,
-                'pix_key' => $request->pix_key ?? $store->pix_key,
-                'schedules' => $request->schedules ?? $store->schedules,
-                'is_open' => $request->boolean('is_open') ?? $store->is_open,
-                'is_delivered' => $request->boolean('is_delivered') ?? $store->is_delivered,
-                'delivery_time_km' => $request->delivery_time_km ?? $store->delivery_time_km,
-                'dynamic_freight_km' => $request->dynamic_freight_km ?? $store->dynamic_freight_km,
+                'pix_key' => $data['pix_key'] ?? $store->pix_key,
+                'schedules' => $data['schedules'] ?? $store->schedules,
+
+                'is_open' => array_key_exists('is_open', $data)
+                    ? $data['is_open']
+                    : $store->is_open,
+
+                'is_delivered' => array_key_exists('is_delivered', $data)
+                    ? $data['is_delivered']
+                    : $store->is_delivered,
+
+                'delivery_time_km' => $data['delivery_time_km'] ?? $store->delivery_time_km,
+                'dynamic_freight_km' => $data['dynamic_freight_km'] ?? $store->dynamic_freight_km,
             ], $store);
+
+
 
             return response(['store' => $storeUpdated], 200);
         } catch (Exception $e) {

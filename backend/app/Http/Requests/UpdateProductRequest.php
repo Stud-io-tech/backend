@@ -5,7 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductRequest extends FormRequest
+
+class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,12 +21,13 @@ class ProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
     protected function prepareForValidation(): void
     {
-        $this->merge([
-            'is_perishable' => filter_var($this->is_perishable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-        ]);
+        if ($this->has('is_perishable')) {
+            $this->merge([
+                'is_perishable' => filter_var($this->is_perishable, FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
     }
 
     public function rules(): array
@@ -35,7 +37,7 @@ class ProductRequest extends FormRequest
             'description' => 'required|string',
             'price' => 'required|numeric',
             'image' => 'image',
-            'store_id' => ['required', 'string', Rule::exists('stores', 'id')],
+            'is_perishable' => 'sometimes|boolean'
         ];
     }
 }
