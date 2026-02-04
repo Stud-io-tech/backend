@@ -67,7 +67,9 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'store_id' => $request->store_id,
                 'amount' => $request->amount ?? 1,
-                'preparation_time' => $request->preparation_time ?? 0
+                'preparation_time' => $request->preparation_time ?? 0,
+                'is_perishable' => $request->is_perishable ?? false,
+
             ], );
 
             return response(['product' => $product], 201);
